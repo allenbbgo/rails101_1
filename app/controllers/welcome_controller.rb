@@ -3,8 +3,5 @@ class WelcomeController < ApplicationController
         flash[:notice] = "good"
         flash[:alert]="goodnight"
         flash[:warning]="fail"
-
     end
-
-
 end

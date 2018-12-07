@@ -1,5 +1,6 @@
 class GroupsController < ApplicationController
 before_action :authenticate_user! , only: [:new, :create]
+before_action :find_group_and_check_permission, only: [:edit,:update,:destroy]
 
     def index 
         @groups =Group.all
@@ -23,13 +24,14 @@ before_action :authenticate_user! , only: [:new, :create]
 
     def show
         @group = Group.find(params[:id])
+        
     end
     def edit
-        @group = Group.find(params[:id])
+        find_group_and_check_permission
     end
 
     def update
-        @group =Group.find(params[:id])
+        find_group_and_check_permission
 
         if @group.update(group_params)
 
@@ -40,7 +42,8 @@ before_action :authenticate_user! , only: [:new, :create]
     end
 
     def destroy
-        @group = Group.find(params[:id])
+        find_group_and_check_permission
+
         @group.destroy
         flash[:alert] = "Group delete ok"
         redirect_to groups_path
@@ -53,5 +56,12 @@ before_action :authenticate_user! , only: [:new, :create]
         params.require(:group).permit(:title,:description)
     end
 
+    def find_group_and_check_permission
+        @group = Group.find(params[:id])   
 
+        if current_user != @group.user
+            redirect_to root_path, alert: "權限不足，請登入帳號"
+        end
+
+    end
 end

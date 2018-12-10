@@ -41,7 +41,7 @@ gem 'jquery-rails'
 gem 'simple_form'
 gem 'devise'
 gem 'will_paginate'
-
+gem 'activerecord-reset-pk-sequence'
 
 
 group :development, :test do

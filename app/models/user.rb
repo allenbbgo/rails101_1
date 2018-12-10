@@ -15,4 +15,16 @@ class User < ApplicationRecord
     zxcer_groups.include?(group)
     
   end
+
+  def Join!(group)
+    zxcer_groups << group
+  end
+
+  def Quit!(group)
+    zxcer_groups.delete(group)
+  end
+
+
+
+
 end

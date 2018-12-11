@@ -15,7 +15,7 @@ before_action :find_group_and_check_permission, only: [:edit,:update,:destroy]
         @group = Group.new(group_params)
         @group.user = current_user
         if @group.save
-
+        current_user.join!(@group)
         redirect_to groups_path
         else
             render :new
@@ -54,6 +54,36 @@ before_action :find_group_and_check_permission, only: [:edit,:update,:destroy]
         flash[:alert] = "Group delete ok"
         redirect_to groups_path
     end
+
+
+    def join
+        @group = Group.find(params[:id])
+
+        if !current_user.is_member_of?(@group)
+            current_user.Join!(@group)
+            flash[:notice] = " 加入本討論板成功"
+        else
+            flash[:warning] = "你已經入本討論"
+        end
+        
+        redirect_to group_path(@group)
+    end
+
+    def quit
+        @group = Group.find(params[:id])
+
+        if current_user.is_member_of?(@group)
+            current_user.Quit!(@group)
+            flash[:alert] = "成功退出"
+            else
+            flash[:warning] = "你已成功退出"
+            end
+
+            redirect_to group_path(@group)
+
+    end
+
+
 
 
     private

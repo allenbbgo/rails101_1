@@ -1,6 +1,13 @@
 class PostsController < ApplicationController
     before_action :authenticate_user!, :only => [:new, :create]
     
+    # def index 
+    #     # @groups =Group.all
+    #     @groups =Group.includes(:user)
+    #     # @groups =Group.joins(:user)
+
+    # end
+
     def new 
         @group = Group.find(params[:group_id])
         @post = Post.new
@@ -20,7 +27,29 @@ class PostsController < ApplicationController
 
     end
 
+    def edit
+        find_group_and_check_permission
 
+    end
+
+    def update
+        find_group_and_check_permission
+
+        if @post.update(post_params)
+
+        redirect_to account_posts_path,notice: "update ok"
+            else
+                render :edit
+            end
+    end
+
+    def destroy
+        @post =  Post.find(params[:id])
+
+        @post.destroy
+        flash[:alert] = "Post delete ok"
+        redirect_to account_posts_path
+    end
 
 
     private 
@@ -29,6 +58,14 @@ class PostsController < ApplicationController
         params.require(:post).permit(:content)
     end
 
+    def find_group_and_check_permission
+        @post =  Post.find(params[:id])   
+        @group = Group.find(params[:group_id])
+        if current_user != @group.user
+            redirect_to root_path, alert: "權限不足，請登入帳號"
+        end
+
+    end
 
 
 end

@@ -3,10 +3,11 @@ before_action :authenticate_user! , only: [:new, :create]
 before_action :find_group_and_check_permission, only: [:edit,:update,:destroy]
 
     def index 
-        @groups =Group.all
-    end
-    
+        # @groups =Group.all
+        @groups =Group.includes(:user)
+        # @groups =Group.joins(:user)
 
+    end
     def new
         @group =Group.new
     end
@@ -25,7 +26,7 @@ before_action :find_group_and_check_permission, only: [:edit,:update,:destroy]
     def show
         @group = Group.find(params[:id])
         @post = @group.posts.recentt.paginate(:page => params[:page], :per_page=>5)
-
+        
         
 
     end

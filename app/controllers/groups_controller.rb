@@ -6,7 +6,7 @@ before_action :find_group_and_check_permission, only: [:edit,:update,:destroy]
         # @groups =Group.all
         @groups =Group.includes(:user)
         # @groups =Group.joins(:user)
-
+        @tt= 'zxczxczxc'
     end
     def new
         @group =Group.new
